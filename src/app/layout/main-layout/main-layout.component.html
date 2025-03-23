@@ -1,0 +1,19 @@
+<div class="min-h-screen bg-light text-dark flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow">
+        <app-navbar></app-navbar>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="flex flex-1">
+        <!-- Sidebar (hidden on small screens) -->
+        <aside class="hidden md:block w-60 bg-dark text-white">
+            <app-sidebar></app-sidebar>
+        </aside>
+
+        <!-- Main View -->
+        <main class="flex-1 p-6 overflow-y-auto">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>

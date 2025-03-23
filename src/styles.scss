@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+    --color-white: #FFFFFF;
+    --color-primary: #0F62FE;
+    --color-primary-dark: #0043CE;
+    --color-primary-light: #D0E2FF;
+
+    --color-dark: #1E293B;
+    --color-light: #F8FAFC;
+
+    --color-neutral-50: #F8FAFC;
+    --color-neutral-100: #F1F5F9;
+    --color-neutral-200: #E2E8F0;
+    --color-neutral-300: #CBD5E1;
+    --color-neutral-400: #94A3B8;
+    --color-neutral-500: #64748B;
+    --color-neutral-600: #475569;
+    --color-neutral-700: #334155;
+    --color-neutral-800: #1E293B;
+    --color-neutral-900: #0F172A;
+
+    --color-success: #10B981;
+    --color-error: #EF4444;
+    --color-warning: #F59E0B;
+}
+
+
+body {
+    @apply bg-neutral-50 text-neutral-900;
+}
+
+/* Butonlar için genel stil */
+.btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+}
+
+.btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark;
+}
+
+.btn-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-white;
+}
