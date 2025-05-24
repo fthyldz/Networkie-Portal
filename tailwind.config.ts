@@ -31,6 +31,11 @@ const config: Config = {
                 error: '#EF4444',
                 warning: '#F59E0B',
             },
+            zIndex: {
+                60: 60,
+                70: 70,
+                9999: 9999
+            }
         },
     },
     plugins: [],

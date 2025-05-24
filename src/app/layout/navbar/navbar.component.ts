@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, HostListener } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { LoadingService } from '../../shared/services/loading.service';
 
 @Component({
     selector: 'app-navbar',
@@ -7,50 +10,94 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-neutral-200 z-50">
             <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                 <div class="flex items-center gap-6">
-                    <img src="assets/logo.png" alt="Logo" class="h-8" />
-                    <div class="relative group">
-                        <input 
-                            type="search" 
-                            placeholder="Kişi, iş ilanı veya içerik ara..."
-                            class="w-80 h-10 bg-neutral-50 rounded-full pl-12 pr-4 border border-transparent focus:border-primary focus:outline-none focus:bg-white transition-all"
-                        >
-                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors"></i>
+                    <img src="assets/logo.png" alt="Logo" class="h-8 cursor-pointer" (click)="goTo('dashboard')" />
+                    <div class="hidden md:flex gap-4 ml-8">
+                        <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('users')">Kullanıcılar</button>
+                        <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('universities')">Üniversiteler</button>
+                        <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('departments')">Bölümler</button>
+                        <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('professions')">Meslekler</button>
+                        <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('social-platforms')">Sosyal Platformlar</button>
+                        <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('map')">Harita Bilgileri</button>
                     </div>
                 </div>
                 
-                <div class="flex items-center">
-                    <nav class="flex items-center">
-                        <a routerLink="/home" 
-                           routerLinkActive="text-primary border-primary"
-                           class="px-5 h-16 flex items-center gap-2 text-neutral-600 hover:text-primary border-b-2 border-transparent transition-colors">
-                            <i class="fas fa-home text-xl"></i>
-                            <span class="text-sm font-medium">Ana Sayfa</span>
-                        </a>
-                        <a routerLink="/network" 
-                           routerLinkActive="text-primary border-primary"
-                           class="px-5 h-16 flex items-center gap-2 text-neutral-600 hover:text-primary border-b-2 border-transparent transition-colors">
-                            <i class="fas fa-users text-xl"></i>
-                            <span class="text-sm font-medium">Ağım</span>
-                        </a>
-                        <a routerLink="/jobs" 
-                           routerLinkActive="text-primary border-primary"
-                           class="px-5 h-16 flex items-center gap-2 text-neutral-600 hover:text-primary border-b-2 border-transparent transition-colors">
-                            <i class="fas fa-briefcase text-xl"></i>
-                            <span class="text-sm font-medium">İş İlanları</span>
-                        </a>
-                        
-                        <div class="flex items-center pl-4 ml-4 border-l border-neutral-200">
-                            <button class="relative w-10 h-10 rounded-full overflow-hidden hover:ring-2 hover:ring-primary/20 transition-all">
-                                <img src="assets/avatar.jpg" alt="Profil" class="w-full h-full object-cover" />
-                                <span class="absolute top-0 right-0 w-3 h-3 bg-primary border-2 border-white rounded-full"></span>
-                            </button>
-                        </div>
-                    </nav>
+                <div class="relative" (mouseleave)="closeMenu()">
+                    <button (click)="toggleMenu()" class="relative w-10 h-10 rounded-full overflow-hidden hover:ring-2 hover:ring-primary/20 transition-all">
+                        <img src="assets/avatar.jpg" alt="Profil" class="w-full h-full object-cover" />
+                    </button>
+                    <div *ngIf="menuOpen" class="absolute right-0 top-10 w-40 bg-white border border-gray-200 rounded-lg shadow-md z-50">
+                        <button (click)="goToProfile()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
+                            <i class="fas fa-user mr-2"></i> Profil
+                        </button>
+                        <button (click)="logout()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Çıkış Yap
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>
     `,
     standalone: true,
-    imports: [RouterLink, RouterLinkActive]
+    imports: [CommonModule/*RouterLink, RouterLinkActive*/]
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+    menuOpen = false;
+
+    constructor(
+        private eRef: ElementRef,
+        private authService: AuthService,
+        private router: Router,
+        private loadingService: LoadingService
+    ) { }
+
+    toggleMenu() {
+        this.menuOpen = !this.menuOpen;
+    }
+
+    closeMenu() {
+        this.menuOpen = false;
+    }
+
+    @HostListener('document:click', ['$event'])
+    clickOutside(event: Event) {
+        if (!this.eRef.nativeElement.contains(event.target)) {
+            this.menuOpen = false;
+        }
+    }
+
+    goToProfile() {
+        this.router.navigate(['/profile']);
+    }
+
+    logout() {
+        this.loadingService.show('', 0.5);
+        this.authService.logout();
+        this.router.navigate(['/auth', 'login']);
+    }
+
+    goTo(page: string) {
+        switch (page) {
+            case 'dashboard':
+                this.router.navigate(['/dashboard']);
+                break;
+            case 'users':
+                this.router.navigate(['/users']);
+                break;
+            case 'universities':
+                this.router.navigate(['/universities']);
+                break;
+            case 'departments':
+                this.router.navigate(['/departments']);
+                break;
+            case 'professions':
+                this.router.navigate(['/professions']);
+                break;
+            case 'social-platforms':
+                this.router.navigate(['/social-platforms']);
+                break;
+            case 'map':
+                this.router.navigate(['/map']);
+                break;
+        }
+    }
+}

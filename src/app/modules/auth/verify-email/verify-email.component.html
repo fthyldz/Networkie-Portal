@@ -1,9 +1,9 @@
-<div class="min-h-[60vh] flex flex-col items-center justify-center text-center space-y-6">
+<div class="min-h-[60vh] flex flex-col items-center justify-center text-center space-y-6 m-auto">
     <h2 class="text-2xl font-bold text-dark">Email Doğrulama</h2>
     <p class="text-dark max-w-md">
         Kayıt işlemini tamamlamak için lütfen email adresinize gönderilen doğrulama linkine tıklayın.
     </p>
-    <button class="bg-primary text-white px-6 py-2 rounded hover:bg-primary-dark transition">
+    <button (click)="resendEmail()" class="bg-primary text-white px-6 py-2 rounded hover:bg-primary-dark transition">
         Doğrulama Email'ini Tekrar Gönder
     </button>
 </div>

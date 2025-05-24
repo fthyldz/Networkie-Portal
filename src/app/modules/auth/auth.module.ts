@@ -7,6 +7,8 @@ import { AuthRoutingModule } from "./auth.routes";
 import { RegisterComponent } from "./register/register.component";
 import { VerifyEmailComponent } from "./verify-email/verify-email.component";
 import { CompleteProfileComponent } from "./complete-profile/complete-profile.component";
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { SharedComponentModule } from "../../shared/components/shared-component.module";
 
 @NgModule({
     declarations: [
@@ -20,7 +22,9 @@ import { CompleteProfileComponent } from "./complete-profile/complete-profile.co
         ReactiveFormsModule,
         FormsModule,
         RouterModule,
-        AuthRoutingModule
+        AuthRoutingModule,
+        NgxIntlTelInputModule,
+        SharedComponentModule
     ],
     exports: []
 })

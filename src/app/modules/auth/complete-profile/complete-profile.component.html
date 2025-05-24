@@ -1,166 +1,176 @@
-<form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
-    <h2 class="text-2xl font-bold text-center text-dark">Profil Bilgilerini Tamamla</h2>
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="w-full mx-auto space-y-6 px-6 py-10">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Profil Bilgilerini Tamamla</h2>
 
-    <!-- Name -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div>
-            <label class="block text-sm font-medium text-dark">Ad</label>
-            <input type="text" formControlName="firstName"
-                class="w-full max-w-lg rounded border border-slate-300 p-2" />
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-dark">İkinci Ad</label>
-            <input type="text" formControlName="middleName"
-                class="w-full max-w-lg rounded border border-slate-300 p-2" />
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-dark">Soyad</label>
-            <input type="text" formControlName="lastName" class="w-full max-w-lg rounded border border-slate-300 p-2" />
-        </div>
-    </div>
-
-    <!-- Phone -->
-    <div class="grid grid-cols-2 gap-6">
-        <div>
-            <label class="block text-sm font-medium text-dark">Telefon Kodu</label>
-            <select formControlName="phoneCountryCode" class="w-full max-w-lg rounded border border-slate-300 p-2">
-                <option value="+90">+90</option>
-                <option value="+1">+1</option>
-                <option value="+44">+44</option>
-                <option value="+49">+49</option>
-                <!-- daha fazla kod eklenebilir -->
-            </select>
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-dark">Telefon Numarası</label>
-            <input type="text" formControlName="phoneNumber"
-                class="w-full max-w-lg rounded border border-slate-300 p-2" />
-        </div>
-    </div>
-
-    <!-- Gender & Birthdate -->
-    <div class="grid grid-cols-2 gap-6">
-        <div>
-            <label class="block text-sm font-medium text-dark">Cinsiyet</label>
-            <select formControlName="gender" class="w-full max-w-lg rounded border border-slate-300 p-2">
-                <option value="1">Erkek</option>
-                <option value="2">Kadın</option>
-                <option value="3">Diğer</option>
-            </select>
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-dark">Doğum Tarihi</label>
-            <input type="date" formControlName="birthOfDate"
-                class="w-full max-w-lg rounded border border-slate-300 p-2" />
-        </div>
-    </div>
-
-    <!-- Employment -->
-    <div class="grid grid-cols-2 gap-6">
-        <label class="flex items-center gap-2">
-            <input type="checkbox" formControlName="isEmployed" class="form-checkbox" />
-            Çalışıyor musun?
-        </label>
-        <label class="flex items-center gap-2">
-            <input type="checkbox" formControlName="isHiring" class="form-checkbox" />
-            Personel arıyor musun?
-        </label>
-    </div>
-
-    <!-- Profession -->
+    <!-- Telefon -->
     <div>
-        <label class="block text-sm font-medium text-dark">Meslek</label>
-        <select formControlName="professionId" class="w-full max-w-lg rounded border border-slate-300 p-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Telefon Numarası</label>
+        <ngx-intl-tel-input
+            [cssClass]="'w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition'"
+            [enableAutoCountrySelect]="true" [enablePlaceholder]="true" [searchCountryFlag]="true"
+            [preferredCountries]="preferredCountries" [searchCountryPlaceholder]="'Ülke Ara'"
+            [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]" [selectFirstCountry]="true"
+            [phoneValidation]="true" [separateDialCode]="true" formControlName="phoneNumber">
+        </ngx-intl-tel-input>
+    </div>
+
+    <!-- Cinsiyet & Doğum Tarihi -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Cinsiyet</label>
+            <select formControlName="gender"
+                class="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                <option [value]="null" disabled selected>Cinsiyet Seç</option>
+                <option [value]="1">Erkek</option>
+                <option [value]="2">Kadın</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Doğum Tarihi</label>
+            <input type="date" formControlName="birthOfDate"
+                class="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition" />
+        </div>
+    </div>
+
+    <!-- Çalışma Durumu -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <label
+            class="inline-flex items-center space-x-2 p-3 bg-gray-50 rounded-lg border hover:bg-blue-50 cursor-pointer transition">
+            <input type="checkbox" formControlName="isEmployed" class="form-checkbox h-5 w-5 text-blue-600" />
+            <span class="text-sm text-gray-700">Çalışıyor musun?</span>
+        </label>
+        <label
+            class="inline-flex items-center space-x-2 p-3 bg-gray-50 rounded-lg border hover:bg-blue-50 cursor-pointer transition">
+            <input type="checkbox" formControlName="isSeekingForJob" class="form-checkbox h-5 w-5 text-blue-600" />
+            <span class="text-sm text-gray-700">İş arıyor musun?</span>
+        </label>
+        <label
+            class="inline-flex items-center space-x-2 p-3 bg-gray-50 rounded-lg border hover:bg-blue-50 cursor-pointer transition">
+            <input type="checkbox" formControlName="isHiring" class="form-checkbox h-5 w-5 text-blue-600" />
+            <span class="text-sm text-gray-700">Personel arıyor musun?</span>
+        </label>
+    </div>
+
+    <!-- Meslek -->
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Meslek</label>
+        <select formControlName="professionId"
+            class="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+            <option value="" disabled selected>Meslek Seç</option>
             <option *ngFor="let profession of professionsList" [value]="profession.id">{{ profession.name }}</option>
             <option value="custom">Diğer...</option>
         </select>
         <input *ngIf="profileForm.get('professionId')?.value === 'custom'" type="text"
             formControlName="customProfessionName" placeholder="Yeni Meslek Adı"
-            class="mt-2 w-full max-w-lg rounded border border-slate-300 p-2" />
+            class="mt-2 w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
     </div>
 
-    <!-- Universities -->
+    <!-- Üniversite Listesi -->
     <div formArrayName="universities" class="space-y-6">
         <div *ngFor="let group of universitiesFormArray.controls; let i = index" [formGroupName]="i"
-            class="border p-4 rounded-lg bg-white shadow">
+            class="border p-4 rounded-xl bg-gray-50 shadow-sm space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- University -->
+                <!-- Üniversite -->
                 <div>
-                    <label class="block text-sm font-medium text-dark">Üniversite</label>
-                    <select formControlName="universityId" class="w-full max-w-lg rounded border border-slate-300 p-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Üniversite</label>
+                    <select formControlName="universityId"
+                        class="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <option value="" disabled selected>Üniversite Seç</option>
                         <option *ngFor="let university of universitiesList" [value]="university.id">{{ university.name
                             }}</option>
                         <option value="custom">Diğer...</option>
                     </select>
                     <input *ngIf="group.get('universityId')?.value === 'custom'" type="text"
                         formControlName="customUniversityName" placeholder="Yeni Üniversite Adı"
-                        class="mt-2 w-full max-w-lg rounded border border-slate-300 p-2" />
+                        class="mt-2 w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
                 </div>
 
-                <!-- Department -->
+                <!-- Bölüm -->
                 <div>
-                    <label class="block text-sm font-medium text-dark">Bölüm</label>
-                    <select formControlName="departmentId" class="w-full max-w-lg rounded border border-slate-300 p-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Bölüm</label>
+                    <select formControlName="departmentId"
+                        class="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <option value="" disabled selected>Bölüm Seç</option>
                         <option *ngFor="let department of departmentsList" [value]="department.id">{{ department.name }}
                         </option>
                         <option value="custom">Diğer...</option>
                     </select>
                     <input *ngIf="group.get('departmentId')?.value === 'custom'" type="text"
                         formControlName="customDepartmentName" placeholder="Yeni Bölüm Adı"
-                        class="mt-2 w-full max-w-lg rounded border border-slate-300 p-2" />
+                        class="mt-2 w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
                 </div>
 
-                <!-- Entry Year -->
+                <!-- Giriş Yılı -->
                 <div>
-                    <label class="block text-sm font-medium text-dark">Giriş Yılı</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Giriş Yılı</label>
                     <input type="number" formControlName="universityEntryYear"
-                        class="w-full max-w-lg rounded border border-slate-300 p-2" placeholder="2020" />
+                        class="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
                 </div>
             </div>
-            <div class="mt-3 text-right">
-                <button type="button" (click)="removeUniversity(i)" class="text-sm text-red-600 hover:underline">
-                    Bu üniversite bilgisini kaldır
-                </button>
+            <div class="text-right">
+                <button type="button" (click)="removeUniversity(i)" class="text-sm text-red-600 hover:underline">Bu
+                    üniversite bilgisini kaldır</button>
             </div>
         </div>
     </div>
 
-    <div class="mt-4">
-        <button type="button" (click)="addUniversity()" class="bg-primary text-white py-2 px-4 rounded">
+    <div>
+        <button type="button" (click)="addUniversity()"
+            class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition">
             + Üniversite Ekle
         </button>
     </div>
 
-    <!-- Location -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <select formControlName="countryId" class="rounded border p-2 border-slate-300">
-            <option value="" disabled selected>Ülke Seç</option>
-            <option *ngFor="let country of countriesList" [value]="country.id">{{ country.name }}</option>
-        </select>
-        <select formControlName="stateId" class="rounded border p-2 border-slate-300">
-            <option value="">Eyalet (opsiyonel)</option>
-            <option *ngFor="let state of statesList" [value]="state.id">{{ state.name }}</option>
-        </select>
-        <select formControlName="cityId" class="rounded border p-2 border-slate-300">
-            <option value="" disabled selected>Şehir Seç</option>
-            <option *ngFor="let city of citiesList" [value]="city.id">{{ city.name }}</option>
-        </select>
-        <select formControlName="districtId" class="rounded border p-2 border-slate-300">
-            <option value="" disabled selected>İlçe Seç</option>
-            <option *ngFor="let district of districtsList" [value]="district.id">{{ district.name }}</option>
-        </select>
+    <!-- Konum -->
+    <div class="border rounded-lg shadow-sm bg-white p-4">
+        <div class="text-right mb-4">
+            <button type="button" (click)="selectLocation()"
+                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                {{ selectFromMap ? 'Manuel Seç' : 'Haritadan Seç' }}
+            </button>
+        </div>
+
+        <div *ngIf="selectFromMap">
+            <app-map [height]="'400px'" [showMarker]="true" (mapClick)="mapClick($event)"></app-map>
+            <div class="mt-4 p-4 bg-gray-100 rounded grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <p><strong>Ülke:</strong> {{ customCountryName || 'Seçilmedi' }}</p>
+                <p><strong>Eyalet:</strong> {{ customStateName || 'Seçilmedi' }}</p>
+                <p><strong>Şehir:</strong> {{ customCityName || 'Seçilmedi' }}</p>
+                <p><strong>İlçe:</strong> {{ customDistrictName || 'Seçilmedi' }}</p>
+            </div>
+        </div>
+
+        <div [hidden]="selectFromMap" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+            <select formControlName="countryId" (change)="getStates(); getCities();"
+                class="rounded-md border p-2 border-gray-300">
+                <option value="" disabled selected>Ülke Seç</option>
+                <option *ngFor="let country of countriesList" [value]="country.id">{{ country.name }}</option>
+            </select>
+            <select formControlName="stateId" (change)="getCities()" class="rounded-md border p-2 border-gray-300">
+                <option value="" disabled selected>Eyalet Seç</option>
+                <option *ngFor="let state of statesList" [value]="state.id">{{ state.name }}</option>
+            </select>
+            <select formControlName="cityId" (change)="getDistricts()" class="rounded-md border p-2 border-gray-300">
+                <option value="" disabled selected>Şehir Seç</option>
+                <option *ngFor="let city of citiesList" [value]="city.id">{{ city.name }}</option>
+            </select>
+            <select formControlName="districtId" class="rounded-md border p-2 border-gray-300">
+                <option value="" disabled selected>İlçe Seç</option>
+                <option *ngFor="let district of districtsList" [value]="district.id">{{ district.name }}</option>
+            </select>
+        </div>
     </div>
 
-    <!-- Social Platforms -->
+    <!-- Sosyal Platformlar -->
     <div *ngFor="let platform of socialPlatforms" class="mb-4">
-        <label class="block text-sm font-medium text-dark">{{ platform.name }}</label>
-        <input [formControlName]="'social_' + platform.id" [required]="platform.isRequired" type="url"
+        <label class="block text-sm font-medium text-gray-700 mb-1">{{ platform.name }}</label>
+        <input [formControlName]="'social_' + platform.id" [required]="platform.isRequired ?? false" type="url"
             placeholder="{{ platform.name }} profil linki"
-            class="w-full max-w-lg rounded border border-slate-300 p-2" />
+            class="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition" />
     </div>
 
+    <!-- Submit -->
     <button type="submit" [disabled]="profileForm.invalid"
-        class="w-full bg-primary text-white font-semibold py-2 rounded hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed">
+        class="w-full bg-blue-600 text-white font-semibold py-3 rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
         Kaydet ve Devam Et
     </button>
 </form>

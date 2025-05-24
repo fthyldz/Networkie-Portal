@@ -1,0 +1,26 @@
+# Node modules
+node_modules
+npm-debug.log
+
+# Output klasörleri
+dist
+tmp
+out-tsc
+
+# IDE/editor dosyaları
+.vscode
+.idea
+*.swp
+
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Test, config vs.
+karma.conf.js
+coverage
+.env
