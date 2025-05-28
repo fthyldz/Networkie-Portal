@@ -79,7 +79,8 @@ export class LoginComponent implements OnInit {
                     }
                 },
                 error: (error) => {
-                    this.modalService.error('Bir hata oluştu');
+                    this.modalService.error('Email veya Şifre Hatalı!');
+                    this.loadingService.hide();
                 },
                 complete: () => {
                     this.loadingService.hide();

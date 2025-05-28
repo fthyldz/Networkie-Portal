@@ -11,6 +11,7 @@ import { BaseApiService } from "../base-api.service";
 export class AuthService extends BaseApiService {
     private readonly TOKEN_KEY = 'token';
     private readonly REFRESH_TOKEN_KEY = 'refreshToken';
+    private readonly IS_MANAGER = 'isManager';
     private readonly authSubject = new BehaviorSubject<boolean>(this.hasToken());
     
     isAuthenticated$ = this.authSubject.asObservable();
@@ -26,6 +27,7 @@ export class AuthService extends BaseApiService {
             tap(response => {
                 if (response.data?.token) {
                     this.setToken(response.data.token);
+                    this.setIsManager(response.data.isManager);
                 }
                 if (response.data?.refreshToken) {
                     this.setRefreshToken(response.data.refreshToken);
@@ -36,6 +38,8 @@ export class AuthService extends BaseApiService {
 
     logout(): void {
         localStorage.removeItem(this.TOKEN_KEY);
+        localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+        localStorage.removeItem(this.IS_MANAGER);
         this.authSubject.next(false);
     }
 
@@ -47,11 +51,16 @@ export class AuthService extends BaseApiService {
     removeToken(): void {
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+        localStorage.removeItem(this.IS_MANAGER);
         this.authSubject.next(false);
     }
 
     setRefreshToken(refreshToken: string): void {
         localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
+    }
+
+    setIsManager(isManager: boolean): void {
+        localStorage.setItem(this.IS_MANAGER, JSON.stringify(isManager));
     }
 
     hasToken(): boolean {

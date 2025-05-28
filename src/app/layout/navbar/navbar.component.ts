@@ -11,13 +11,13 @@ import { LoadingService } from '../../shared/services/loading.service';
             <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                 <div class="flex items-center gap-6">
                     <img src="assets/logo.png" alt="Logo" class="h-8 cursor-pointer" (click)="goTo('dashboard')" />
-                    <div class="hidden md:flex gap-4 ml-8">
+                    <div class="hidden md:flex gap-4 ml-8" *ngIf="isManager">
                         <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('users')">Kullanıcılar</button>
                         <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('universities')">Üniversiteler</button>
                         <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('departments')">Bölümler</button>
                         <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('professions')">Meslekler</button>
                         <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('social-platforms')">Sosyal Platformlar</button>
-                        <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('map')">Harita Bilgileri</button>
+                        <button class="text-sm font-medium text-neutral-700 hover:text-primary transition cursor-pointer" (click)="goTo('map-info')">Harita Bilgileri</button>
                     </div>
                 </div>
                 
@@ -42,13 +42,16 @@ import { LoadingService } from '../../shared/services/loading.service';
 })
 export class NavbarComponent {
     menuOpen = false;
+    isManager: boolean = false;
 
     constructor(
         private eRef: ElementRef,
         private authService: AuthService,
         private router: Router,
         private loadingService: LoadingService
-    ) { }
+    ) {
+        this.isManager = JSON.parse(localStorage.getItem("isManager") as string)
+    }
 
     toggleMenu() {
         this.menuOpen = !this.menuOpen;
@@ -81,22 +84,22 @@ export class NavbarComponent {
                 this.router.navigate(['/dashboard']);
                 break;
             case 'users':
-                this.router.navigate(['/users']);
+                this.router.navigate(['/admin', 'users']);
                 break;
             case 'universities':
-                this.router.navigate(['/universities']);
+                this.router.navigate(['/admin', 'universities']);
                 break;
             case 'departments':
-                this.router.navigate(['/departments']);
+                this.router.navigate(['/admin', 'departments']);
                 break;
             case 'professions':
-                this.router.navigate(['/professions']);
+                this.router.navigate(['/admin', 'professions']);
                 break;
             case 'social-platforms':
-                this.router.navigate(['/social-platforms']);
+                this.router.navigate(['/admin', 'social-platforms']);
                 break;
-            case 'map':
-                this.router.navigate(['/map']);
+            case 'map-info':
+                this.router.navigate(['/admin', 'map-info']);
                 break;
         }
     }

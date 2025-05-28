@@ -11,6 +11,14 @@ export class AuthInterceptor implements HttpInterceptor {
     constructor(private authService: AuthService, private injector: Injector) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        const excludedUrls = [
+            '/auth/login'
+        ];
+        
+        if (excludedUrls.some(url => req.url.includes(url))) {
+            return next.handle(req);
+        }
+
         const token = this.authService.getToken();
 
         let authReq = req;

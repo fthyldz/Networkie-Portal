@@ -14,6 +14,13 @@ export class ResponseInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, handler: HttpHandler): Observable<HttpEvent<any>> {
     console.log('Request URL: ' + req.url);
+    const excludedUrls = [
+      '/auth/login',
+    ];
+  
+    if (excludedUrls.some(url => req.url.includes(url))) {
+      return handler.handle(req);
+    }
     return handler.handle(req).pipe(
         // Response başarılı geldiğinde
         tap((event: HttpEvent<any>) => {
