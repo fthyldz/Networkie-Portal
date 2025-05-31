@@ -1,5 +1,38 @@
 <!-- User List Component -->
 <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-sm p-6">
+    <!-- User Create Form -->
+    <form [formGroup]="createUserForm" (ngSubmit)="createUser()" class="mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <input type="text" formControlName="firstName" placeholder="Ad"
+          class="w-full border border-gray-300 rounded-md p-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
+        <input type="text" formControlName="middleName" placeholder="İkinci Ad"
+          class="w-full border border-gray-300 rounded-md p-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
+        <input type="text" formControlName="lastName" placeholder="Soyad"
+          class="w-full border border-gray-300 rounded-md p-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
+        <input type="email" formControlName="email" placeholder="E-Posta"
+          class="w-full border border-gray-300 rounded-md p-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
+        <input type="password" formControlName="password" placeholder="Şifre"
+          class="w-full border border-gray-300 rounded-md p-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
+        <select formControlName="role"
+          class="w-full border border-gray-300 rounded-md p-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+          <option value="" disabled selected>Rol Seçin</option>
+          <option value="Admin">Admin</option>
+          <option value="User">User</option>
+        </select>
+      </div>
+      
+      <div class="flex items-center space-x-3">
+        <button type="submit"
+          class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          [disabled]="createUserForm.invalid">
+          Kaydet
+        </button>
+        <button type="button" (click)="resetForm()"
+          class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition">
+          İptal
+        </button>
+      </div>
+    </form>
     <h2 class="text-xl font-bold text-gray-800 mb-6 pb-2 border-b flex justify-between items-center">
         <span>Kullanıcı Listesi</span>
         <span class="text-sm font-normal text-gray-500">Toplam: {{ totalCount }} kullanıcı</span>
@@ -16,6 +49,7 @@
                         <th class="px-4 py-3 border-b-2 border-blue-100 font-medium text-blue-800">Soyad</th>
                         <th class="px-4 py-3 border-b-2 border-blue-100 font-medium text-blue-800">E-Posta</th>
                         <th class="px-4 py-3 border-b-2 border-blue-100 font-medium text-blue-800">Telefon</th>
+                        <th class="px-4 py-3 border-b-2 border-blue-100 font-medium text-blue-800">Rol</th>
                         <th class="px-4 py-3 border-b-2 border-blue-100 font-medium text-blue-800"></th>
                     </tr>
                     <tr class="bg-gray-50">
@@ -44,6 +78,11 @@
                                 class="w-full text-sm border border-gray-300 rounded-md shadow-sm p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                 placeholder="Telefon Numarası ara..." />
                         </th>
+                        <th class="p-2 border-b">
+                            <input type="text" [formControlName]="'role'"
+                                class="w-full text-sm border border-gray-300 rounded-md shadow-sm p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                placeholder="Rol ara..." />
+                        </th>
                         <th class="p-2 border-b"></th>
                     </tr>
                 </thead>
@@ -54,6 +93,7 @@
                         <td class="px-4 py-3">{{ user.lastName }}</td>
                         <td class="px-4 py-3">{{ user.email }}</td>
                         <td class="px-4 py-3">{{ user.phoneNumber }}</td>
+                        <td class="px-4 py-3">{{ user.role }}</td>
                         <td class="px-4 py-3">
                             <div class="flex gap-2">
                                 <button

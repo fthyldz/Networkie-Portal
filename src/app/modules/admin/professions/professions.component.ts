@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalService } from '../../../shared/services/modal.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ProfessionsService } from '../../../core/services/admin/professions.service';
+import { LoadingService } from '../../../shared/services/loading.service';
 
 @Component({
     selector: 'app-professions',
@@ -25,7 +26,8 @@ export class ProfessionsComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private professionsService: ProfessionsService,
-        private modalService: ModalService
+        private modalService: ModalService,
+        private loadingService: LoadingService
     ) { }
 
     ngOnInit(): void {
@@ -99,6 +101,7 @@ export class ProfessionsComponent implements OnInit {
 
     onSubmit(): void {
         if (this.professionForm.valid) {
+            this.loadingService.show();
             if (this.isEditMode && this.selectedProfessionId) {
                 this.updateProfession();
             } else {
@@ -110,6 +113,7 @@ export class ProfessionsComponent implements OnInit {
     createProfession(): void {
         this.professionsService.createProfession(this.professionForm.value).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Meslek başarıyla oluşturuldu');
                     this.resetForm();
@@ -119,6 +123,7 @@ export class ProfessionsComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Meslek oluşturulurken bir hata oluştu');
             }
         });
@@ -129,6 +134,7 @@ export class ProfessionsComponent implements OnInit {
 
         this.professionsService.updateProfession(this.selectedProfessionId, this.professionForm.value).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Meslek başarıyla güncellendi');
                     this.resetForm();
@@ -138,6 +144,7 @@ export class ProfessionsComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Meslek güncellenirken bir hata oluştu');
             }
         });
@@ -147,9 +154,10 @@ export class ProfessionsComponent implements OnInit {
         if (!id) return;
         const confirmed = confirm('Bu mesleği silmek istediğinizden emin misiniz?');
         if (!confirmed) return;
-
+        this.loadingService.show();
         this.professionsService.deleteProfession(id).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Meslek başarıyla silindi');
                     this.getData();
@@ -158,6 +166,7 @@ export class ProfessionsComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Meslek silinirken bir hata oluştu');
             }
         });

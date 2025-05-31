@@ -6,15 +6,15 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div *ngIf="isLoading" class="fixed inset-0 bg-gradient-to-br from-primary/60 to-secondary/60 backdrop-blur-md z-50 flex items-center justify-center">
-      <div class="bg-white/90 rounded-xl px-10 py-8 shadow-2xl flex flex-col items-center space-y-6 border border-primary/10">
-        <div class="relative w-16 h-16 flex items-center justify-center">
-          <svg class="animate-spin-slow w-14 h-14 text-primary" viewBox="0 0 50 50">
-            <circle class="opacity-20" cx="25" cy="25" r="20" stroke="currentColor" stroke-width="6" fill="none"/>
-            <circle class="opacity-80" cx="25" cy="25" r="20" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="90" stroke-dashoffset="60"/>
+    <div *ngIf="isLoading" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div class="bg-white rounded-2xl px-8 py-6 shadow-lg flex flex-col items-center space-y-4 border border-gray-200">
+        <div class="relative w-14 h-14 flex items-center justify-center">
+          <svg class="animate-spin w-12 h-12 text-primary" viewBox="0 0 50 50">
+            <circle class="opacity-30" cx="25" cy="25" r="20" stroke="currentColor" stroke-width="5" fill="none"/>
+            <circle class="opacity-90" cx="25" cy="25" r="20" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="90" stroke-dashoffset="60"/>
           </svg>
         </div>
-        <div class="text-lg text-primary font-semibold tracking-wide">{{ message || 'Yükleniyor...' }}</div>
+        <div class="text-base text-gray-700 font-medium">{{ message || 'Yükleniyor...' }}</div>
       </div>
     </div>
   `,

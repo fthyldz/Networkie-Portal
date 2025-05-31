@@ -8,6 +8,7 @@ import { UsersService } from '../../../../../core/services/admin/users.service';
 import { CommonService } from '../../../../../core/services/common/common.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { DateUtils } from '../../../../../shared/utils/date.utils';
+import { LoadingService } from '../../../../../shared/services/loading.service';
 
 @Component({
     selector: 'app-user-edit',
@@ -54,7 +55,8 @@ export class UserEditComponent implements OnInit {
         private userService: UsersService,
         private commonService: CommonService,
         private modalService: ModalService,
-        private router: Router
+        private router: Router,
+        private loadingService: LoadingService
     ) {}
 
     ngOnInit(): void {
@@ -216,7 +218,7 @@ export class UserEditComponent implements OnInit {
 
     onSubmit(): void {
         if (this.editForm.invalid) return;
-
+        this.loadingService.show();
         const formValue = this.editForm.value;
 
         const dto: any = {
@@ -256,9 +258,14 @@ export class UserEditComponent implements OnInit {
 
         this.userService.updateUser(this.userId, dto).subscribe({
             next: () => {
+                this.loadingService.hide();
                 this.modalService.success('Kullanıcı bilgileri güncellendi.');
                 this.router.navigate(['/admin/users']);
-            }
+            },
+            error: (err) => {
+                this.loadingService.hide();
+                this.modalService.error('Kullanıcı bilgileri güncellenirken bir hata oluştu');
+            },
         });
     }
 }

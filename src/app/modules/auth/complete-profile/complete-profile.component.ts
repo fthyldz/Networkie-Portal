@@ -8,6 +8,7 @@ import { DateUtils } from '../../../shared/utils/date.utils';
 import { MapClickedEvent } from '../../../shared/models/common/map.model';
 import { Router } from '@angular/router';
 import { ModalService } from '../../../shared/services/modal.service';
+import { LoadingService } from '../../../shared/services/loading.service';
 
 @Component({
   selector: 'app-complete-profile',
@@ -57,7 +58,8 @@ export class CompleteProfileComponent implements OnInit {
     private authService: AuthService,
     private commonService: CommonService,
     private router: Router,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private loadingService: LoadingService
   ) { }
 
   ngOnInit(): void {
@@ -241,6 +243,7 @@ export class CompleteProfileComponent implements OnInit {
 
   onSubmit(): void {
     if (this.profileForm.invalid) return;
+    this.loadingService.show();
 
     const formValue = this.profileForm.value;
 
@@ -284,6 +287,7 @@ export class CompleteProfileComponent implements OnInit {
 
     this.authService.completeProfile(dataToSubmit).subscribe({
       next: (response) => {
+        this.loadingService.hide();
         if (response.data) {
           console.log('Profil başarıyla tamamlandı:', response.data);
           this.modalService.success('Profil Tamamlandı. Tekrar Giriş Yapmanız Gerekiyor. Yönlendiriliyorsunuz...');
@@ -297,6 +301,7 @@ export class CompleteProfileComponent implements OnInit {
         }
       },
       error: (error) => {
+        this.loadingService.hide();
         console.error('Profil tamamlama hatası:', error);
       }
     });

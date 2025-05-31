@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.verificationCode = params['verificationCode'] || null;
             if (this.verificationCode) {
+                this.authService.logout();
                 this.verifyEmail();
             }
         });

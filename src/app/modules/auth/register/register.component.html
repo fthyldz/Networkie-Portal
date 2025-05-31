@@ -24,7 +24,7 @@
   <div class="space-y-1">
     <label for="lastName" class="block text-sm font-medium text-dark">Soyad</label>
     <input id="lastName" type="text" formControlName="lastName"
-      class="w-full rounded border border-slate-300 p-2 focus:outline-none focus:ring-2 focus:ring-primary" required />
+      class="w-full rounded border border-slate-300 p-2 focus:outline-none focus:ring-2 focus:ring-primary" />
   </div>
 
   <!-- Password -->
@@ -38,7 +38,8 @@
   <div class="flex items-start gap-2">
     <input id="terms" type="checkbox" formControlName="terms" class="mt-1" required />
     <label for="terms" class="text-sm text-dark">
-      Üyelik için <a href="#" class="text-primary hover:underline">kullanıcı sözleşmesini</a> kabul ediyorum.
+      Üyelik için <a href="#" (click)="openTermsModal($event)" class="text-primary hover:underline">kullanıcı
+        sözleşmesini</a> kabul ediyorum.
     </label>
   </div>
 
@@ -54,3 +55,68 @@
     <a routerLink="/auth/login" class="text-primary font-medium hover:underline">Giriş Yap</a>
   </p>
 </form>
+
+<!-- Kullanıcı Sözleşmesi Modal -->
+<div *ngIf="showTermsModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="bg-white rounded-xl shadow-lg p-6 max-w-lg w-full relative">
+    <button (click)="closeTermsModal()" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
+      &times;
+    </button>
+    <h3 class="text-lg font-semibold mb-4">Kullanıcı Sözleşmesi</h3>
+    <div class="text-sm text-gray-700 max-h-64 overflow-y-auto">
+      <p class="mb-2">
+        Bu web sitesini kullanarak, aşağıda belirtilen şartları ve koşulları kabul etmiş sayılırsınız. Kullanıcı
+        Sözleşmesi, sizinle web sitemiz ("Site") arasında bağlayıcı bir sözleşmedir.
+      </p>
+
+      <h4 class="font-semibold mt-4">1. Kullanım Koşulları</h4>
+      <p class="mb-2">
+        Sitemiz yalnızca yasal amaçlarla kullanılabilir. Sitemizde sunulan tüm içerik ve hizmetler yalnızca
+        bilgilendirme
+        amaçlıdır. Sitemizi kullanarak, geçerli tüm yasalara ve yönetmeliklere uymayı kabul etmiş olursunuz.
+      </p>
+
+      <h4 class="font-semibold mt-4">2. Hesap Oluşturma</h4>
+      <p class="mb-2">
+        Sitemizde hesap oluştururken sağladığınız bilgilerin doğru, eksiksiz ve güncel olması zorunludur. Hesap
+        bilgilerinizin
+        güvenliği sizin sorumluluğunuzdadır. Hesabınızın izinsiz kullanımından veya şifre ihlallerinden bizi sorumlu
+        tutamazsınız.
+      </p>
+
+      <h4 class="font-semibold mt-4">3. Gizlilik</h4>
+      <p class="mb-2">
+        Kişisel bilgilerinizin gizliliğini önemsiyoruz. Gizlilik politikamıza uygun olarak bilgilerinizi kullanır ve
+        saklarız.
+        Detaylar için <a href="#" class="text-primary hover:underline">Gizlilik Politikası</a> sayfamızı
+        inceleyebilirsiniz.
+      </p>
+
+      <h4 class="font-semibold mt-4">4. Sorumluluk Reddi</h4>
+      <p class="mb-2">
+        Sitemizde yer alan içerikler, "olduğu gibi" ve "mevcut olduğu şekilde" sunulmaktadır. Hizmetlerin kesintisiz ve
+        hatasız
+        olacağını garanti etmeyiz.
+      </p>
+
+      <h4 class="font-semibold mt-4">5. Değişiklikler</h4>
+      <p class="mb-2">
+        Bu sözleşmeyi önceden bildirimde bulunmaksızın güncelleme hakkımızı saklı tutarız. Güncellenmiş sürümü sitemizde
+        yayımladığımızda yürürlüğe girer. Kullanımınıza devam etmeniz, yeni şartları kabul ettiğiniz anlamına gelir.
+      </p>
+
+      <h4 class="font-semibold mt-4">6. İletişim</h4>
+      <p>
+        Sorularınız için lütfen bizimle iletişime geçin: 
+        <a href="mailto:networkie@gmail.com"
+          class="text-primary hover:underline">networkie&#64;gmail.com</a>
+      </p>
+    </div>
+    <div class="mt-4 text-right">
+      <button (click)="closeTermsModal()"
+        class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark transition">
+        Kapat
+      </button>
+    </div>
+  </div>
+</div>

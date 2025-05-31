@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalService } from '../../../shared/services/modal.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { SocialPlatformsService } from '../../../core/services/admin/social-platforms.service';
+import { LoadingService } from '../../../shared/services/loading.service';
 
 @Component({
     selector: 'app-social-platforms',
@@ -25,7 +26,8 @@ export class SocialPlatformsComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private socialPlatformsService: SocialPlatformsService,
-        private modalService: ModalService
+        private modalService: ModalService,
+        private loadingService: LoadingService
     ) { }
 
     ngOnInit(): void {
@@ -100,6 +102,7 @@ export class SocialPlatformsComponent implements OnInit {
 
     onSubmit(): void {
         if (this.socialPlatformForm.valid) {
+            this.loadingService.show();
             if (this.isEditMode && this.selectedSocialPlatformId) {
                 this.updateSocialPlatform();
             } else {
@@ -111,6 +114,7 @@ export class SocialPlatformsComponent implements OnInit {
     createSocialPlatform(): void {
         this.socialPlatformsService.createSocialPlatform(this.socialPlatformForm.value).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Sosya platform başarıyla oluşturuldu');
                     this.resetForm();
@@ -120,6 +124,7 @@ export class SocialPlatformsComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Sosya platform oluşturulurken bir hata oluştu');
             }
         });
@@ -130,6 +135,7 @@ export class SocialPlatformsComponent implements OnInit {
 
         this.socialPlatformsService.updateSocialPlatform(this.selectedSocialPlatformId, this.socialPlatformForm.value).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Sosya platform başarıyla güncellendi');
                     this.resetForm();
@@ -139,6 +145,7 @@ export class SocialPlatformsComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Sosya platform güncellenirken bir hata oluştu');
             }
         });
@@ -148,9 +155,10 @@ export class SocialPlatformsComponent implements OnInit {
         if (!id) return;
         const confirmed = confirm('Bu sosyal platformu silmek istediğinizden emin misiniz?');
         if (!confirmed) return;
-
+        this.loadingService.show();
         this.socialPlatformsService.deleteSocialPlatform(id).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Sosya platform başarıyla silindi');
                     this.getData();
@@ -159,6 +167,7 @@ export class SocialPlatformsComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Sosya platform silinirken bir hata oluştu');
             }
         });

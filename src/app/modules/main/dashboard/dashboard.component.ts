@@ -137,7 +137,6 @@ export class DashboardComponent implements OnInit {
         const filterValues = this.filters.value;
         const hasEnough = Object.values(filterValues).some((v: any) => v && v.length >= 3);
 
-        // Only require filter values if not on first page
         if (!hasEnough && this.pageIndex !== 0) {
             return;
         }

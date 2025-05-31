@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ModalService } from '../../../shared/services/modal.service';
 import { DateUtils } from '../../../shared/utils/date.utils';
 import { first } from 'rxjs';
+import { LoadingService } from '../../../shared/services/loading.service';
 
 @Component({
     selector: 'app-profile',
@@ -60,7 +61,8 @@ export class ProfileComponent implements OnInit {
         private commonService: CommonService,
         private router: Router,
         private modalService: ModalService,
-        private profileService: ProfileService
+        private profileService: ProfileService,
+        private loadingService: LoadingService
     ) { }
 
     ngOnInit(): void {
@@ -251,7 +253,7 @@ export class ProfileComponent implements OnInit {
 
     onSubmit(): void {
         if (this.profileForm.invalid) return;
-
+        this.loadingService.show();
         const formValue = this.profileForm.value;
 
         const dataToSubmit: any = {
@@ -294,6 +296,7 @@ export class ProfileComponent implements OnInit {
 
         this.profileService.updateProfile(dataToSubmit).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response.data) {
                     console.log('Profil başarıyla güncellendi:', response.data);
                     this.modalService.success('Profil Güncellendi.');
@@ -303,6 +306,7 @@ export class ProfileComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 console.error('Profil güncelleme hatası:', error);
             }
         });

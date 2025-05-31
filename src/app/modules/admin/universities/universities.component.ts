@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalService } from '../../../shared/services/modal.service';
 import { UniversitiesService } from '../../../core/services/admin/universities.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { LoadingService } from '../../../shared/services/loading.service';
 
 @Component({
     selector: 'app-universities',
@@ -25,7 +26,8 @@ export class UniversitiesComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private universitiesService: UniversitiesService,
-        private modalService: ModalService
+        private modalService: ModalService,
+        private loadingService: LoadingService
     ) { }
 
     ngOnInit(): void {
@@ -99,6 +101,7 @@ export class UniversitiesComponent implements OnInit {
 
     onSubmit(): void {
         if (this.universityForm.valid) {
+            this.loadingService.show();
             if (this.isEditMode && this.selectedUniversityId) {
                 this.updateUniversity();
             } else {
@@ -110,6 +113,7 @@ export class UniversitiesComponent implements OnInit {
     createUniversity(): void {
         this.universitiesService.createUniversity(this.universityForm.value).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Üniversite başarıyla oluşturuldu');
                     this.resetForm();
@@ -119,6 +123,7 @@ export class UniversitiesComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Üniversite oluşturulurken bir hata oluştu');
             }
         });
@@ -129,6 +134,7 @@ export class UniversitiesComponent implements OnInit {
 
         this.universitiesService.updateUniversity(this.selectedUniversityId, this.universityForm.value).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Üniversite başarıyla güncellendi');
                     this.resetForm();
@@ -138,6 +144,7 @@ export class UniversitiesComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Üniversite güncellenirken bir hata oluştu');
             }
         });
@@ -148,8 +155,10 @@ export class UniversitiesComponent implements OnInit {
         const confirmed = confirm('Bu üniversiteyi silmek istediğinizden emin misiniz?');
         if (!confirmed) return;
 
+        this.loadingService.show();
         this.universitiesService.deleteUniversity(id).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Üniversite başarıyla silindi');
                     this.getData();
@@ -158,6 +167,7 @@ export class UniversitiesComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Üniversite silinirken bir hata oluştu');
             }
         });

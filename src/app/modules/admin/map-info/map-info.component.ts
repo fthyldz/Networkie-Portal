@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MapInfoService } from "../../../core/services/admin/map-info.service";
 import { ModalService } from "../../../shared/services/modal.service";
 import { debounceTime, distinctUntilChanged } from "rxjs";
+import { LoadingService } from "../../../shared/services/loading.service";
 
 @Component({
     selector: 'app-map-info',
@@ -31,7 +32,9 @@ export class MapInfoComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private mapInfoService: MapInfoService,
-        private modalService: ModalService) { }
+        private modalService: ModalService,
+        private loadingService: LoadingService
+    ) { }
 
     ngOnInit(): void {
         this.filtersCountry = this.fb.group({
@@ -84,9 +87,10 @@ export class MapInfoComponent implements OnInit {
 
     saveCountry() {
         if (this.countryForm.invalid || !this.selectedCountry) return;
-
+        this.loadingService.show();
         this.mapInfoService.createCountry({ name: this.selectedCountry }).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Ülke başarıyla oluşturuldu');
                     this.selectedCountry = null;
@@ -97,6 +101,7 @@ export class MapInfoComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Ülke oluşturulurken bir hata oluştu');
             }
         });   
@@ -104,9 +109,10 @@ export class MapInfoComponent implements OnInit {
 
     saveCity() {
         if (this.cityForm.invalid || !this.selectedCity || !this.selectedCountry) return;
-
+        this.loadingService.show();
         this.mapInfoService.createCity({ name: this.selectedCity, country: this.selectedCountry }).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Eyalet/Şehir başarıyla oluşturuldu');
                     this.selectedCountry = null;
@@ -118,6 +124,7 @@ export class MapInfoComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Eyalet/Şehir oluşturulurken bir hata oluştu');
             }
         });        

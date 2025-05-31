@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsersService } from '../../../../../core/services/admin/users.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { ModalService } from '../../../../../shared/services/modal.service';
+import { LoadingService } from '../../../../../shared/services/loading.service';
 
 @Component({
     selector: 'app-user-list',
@@ -13,13 +15,20 @@ export class UserListComponent implements OnInit {
     
     Math = Math;
     filters!: FormGroup;
+    createUserForm!: FormGroup;
     filteredUsers: any[] = [];
 
     pageIndex = 0;
     pageSize = 25;
     totalCount = 0;
 
-    constructor(private userService: UsersService, private router: Router, private fb: FormBuilder) { }
+    constructor(
+        private userService: UsersService,
+        private router: Router,
+        private fb: FormBuilder,
+        private modalService: ModalService,
+        private loadingService: LoadingService
+    ) { }
 
     ngOnInit(): void {
             this.filters = this.fb.group({
@@ -27,7 +36,17 @@ export class UserListComponent implements OnInit {
                 middleName: [''],
                 lastName: [''],
                 email: [''],
-                phoneNumber: ['']
+                phoneNumber: [''],
+                role: ['']
+            });
+
+            this.createUserForm = this.fb.group({
+                firstName: ['', Validators.required],
+                middleName: [''],
+                lastName: [''],
+                email: ['', [Validators.required, Validators.email]],
+                password: ['', [Validators.required, Validators.minLength(6)]],
+                role: ['', Validators.required]
             });
     
             this.filters.valueChanges
@@ -96,14 +115,49 @@ export class UserListComponent implements OnInit {
     deleteUser(userId: string): void {
         const confirmed = confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');
         if (!confirmed) return;
-
+        this.loadingService.show();
         this.userService.deleteUser(userId).subscribe({
             next: () => {
+                this.loadingService.hide();
                 this.filteredUsers = this.filteredUsers.filter(u => u.id !== userId);
             },
             error: (err) => {
+                this.loadingService.hide();
                 console.error('Kullanıcı silinirken hata oluştu:', err);
             }
         });
+    }
+
+    resetForm(): void {
+        this.createUserForm.reset();
+        this.createUserForm.patchValue({role: ''})
+    }
+
+    createUser(): void {
+        if (this.createUserForm.valid) {
+            this.loadingService.show();
+            const newUser = this.createUserForm.value;
+            console.log('Yeni kullanıcı:', newUser);
+            this.userService.createUser(newUser).subscribe({
+                next: (response) => {
+                    this.loadingService.hide();
+                    if (response && response.data) {
+                        this.modalService.success('Kullanıcı başarıyla oluşturuldu');
+                        this.resetForm();
+                        this.getData();
+                    }
+                    else if (response && response.errors) {
+                        this.modalService.error(response.errors);
+                    }
+                    else {
+                        this.modalService.error('Bir hata oluştu');
+                    }
+                },
+                error: (error) => {
+                    this.loadingService.hide();
+                    this.modalService.error('Kullanıcı oluşturulurken bir hata oluştu');
+                }
+            });
+        }
     }
 }

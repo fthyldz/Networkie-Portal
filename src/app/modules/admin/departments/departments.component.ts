@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalService } from '../../../shared/services/modal.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { DepartmentsService } from '../../../core/services/admin/departments.service';
+import { LoadingService } from '../../../shared/services/loading.service';
 
 @Component({
     selector: 'app-departments',
@@ -25,7 +26,8 @@ export class DepartmentsComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private departmentsService: DepartmentsService,
-        private modalService: ModalService
+        private modalService: ModalService,
+        private loadingService: LoadingService
     ) { }
 
     ngOnInit(): void {
@@ -99,6 +101,7 @@ export class DepartmentsComponent implements OnInit {
 
     onSubmit(): void {
         if (this.departmentForm.valid) {
+            this.loadingService.show();
             if (this.isEditMode && this.selectedDepartmentId) {
                 this.updateDepartment();
             } else {
@@ -110,6 +113,7 @@ export class DepartmentsComponent implements OnInit {
     createDepartment(): void {
         this.departmentsService.createDepartment(this.departmentForm.value).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Bölüm başarıyla oluşturuldu');
                     this.resetForm();
@@ -119,6 +123,7 @@ export class DepartmentsComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Bölüm oluşturulurken bir hata oluştu');
             }
         });
@@ -129,6 +134,7 @@ export class DepartmentsComponent implements OnInit {
 
         this.departmentsService.updateDepartment(this.selectedDepartmentId, this.departmentForm.value).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Bölüm başarıyla güncellendi');
                     this.resetForm();
@@ -138,6 +144,7 @@ export class DepartmentsComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Bölüm güncellenirken bir hata oluştu');
             }
         });
@@ -147,9 +154,10 @@ export class DepartmentsComponent implements OnInit {
         if (!id) return;
         const confirmed = confirm('Bu bölümü silmek istediğinizden emin misiniz?');
         if (!confirmed) return;
-
+        this.loadingService.show();
         this.departmentsService.deleteDepartment(id).subscribe({
             next: (response) => {
+                this.loadingService.hide();
                 if (response) {
                     this.modalService.success('Bölüm başarıyla silindi');
                     this.getData();
@@ -158,6 +166,7 @@ export class DepartmentsComponent implements OnInit {
                 }
             },
             error: (error) => {
+                this.loadingService.hide();
                 this.modalService.error('Bölüm silinirken bir hata oluştu');
             }
         });

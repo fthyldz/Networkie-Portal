@@ -29,4 +29,8 @@ export class UsersService extends BaseApiService {
     public deleteUser(userId: any): Observable<Result<any, any>> {
         return this.delete<Result<any, any>>(`${userId}`);
     }
+
+    public createUser(user: any): Observable<Result<any, any>> {
+        return this.post<Result<any, any>>('', user);
+    }
 }
